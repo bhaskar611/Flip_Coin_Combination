@@ -31,7 +31,7 @@
 
 echo "DOBLET COMBINATION"
 
-declare -A doublet=( 
+declare -A doublet=(
 
                                 [HH]=0
                                 [HT]=0
@@ -140,3 +140,66 @@ do
     echo "percentage of $combination is ${triplet[$combination]}%"
 done
 
+singletcombinations=( ${!singlet[@]} )
+singletcombination_percentages=( ${singlet[@]} )
+
+doubletcombinations=( ${!doublet[@]} )
+doubletcombination_percentages=( ${doublet[@]} )
+
+tripletcombinations=( ${!triplet[@]} )
+tripletcombination_percentages=( ${triplet[@]} )
+
+
+totalcombinations+=( ${singletcombinations[@]} ${doubletcombinations[@]} ${tripletcombinations[@]} )
+totalcombination_percentages+=( ${singletcombination_percentages[@]} ${doubletcombination_percentages[@]} ${tripletcombination_percentages[@]} )
+
+
+
+
+echo " SORTING"
+        echo "sorted singlet percentages"
+	echo "$( printf "%s\n" "${singletcombination_percentages[@]}" | sort -n ) "
+
+	echo  "sorted doublet percentages:"
+	echo "$( printf "%s\n" "${doubletcombination_percentages[@]}" | sort -n ) "
+
+	echo  "sorted triplet percentages:"
+	echo "$( printf "%s\n" "${tripletcombination_percentages[@]}" | sort -n ) "
+
+	echo "WINNERS"
+
+function winner()
+{
+ # local -n allows to move variables in a array to another array in a function
+ local -n keys=$1
+ local -n value=$2
+
+    maximumvalue=0
+    maximumvalue_index=0
+    for(( i = 0; i < ${#value[@]}; i++ ))
+    do
+        if(( value[i] >= maximumvalue ))
+        then
+                maximumvalue=${value[i]}
+                maximumvalue_index=$i
+        fi
+    done
+    echo  ${keys[$maximumvalue_index]}  ${maximumvalue}
+}
+
+	echo "For Singlet Combination"
+	a=$( winner singletcombinations singletcombination_percentages )
+	echo $a
+
+
+	echo "For Doublet Combination"
+	b=$( winner doubletcombinations doubletcombination_percentages )
+	echo $b
+
+	echo "For Triplet Combination"
+	c=$( winner tripletcombinations tripletcombination_percentages )
+        echo $c
+
+	echo "For All Combinations"
+	d=$( winner totalcombinations totalcombination_percentages )
+        echo $d
